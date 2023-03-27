@@ -42,13 +42,8 @@ func main() {
 			continue
 		}
 
-		switch update.Message.Command() {
-		case "help":
-			commander.Help(update.Message)
-		case "list":
-			commander.List(update.Message)
-		default:
-			commander.Default(update.Message)
+		for update := range updates {
+			commander.HandleUpdate(update)
 		}
 	}
 }
