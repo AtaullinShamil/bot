@@ -2,13 +2,17 @@ package main
 
 import (
 	"log"
+	"os"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/joho/godotenv"
 )
 
-const token = "token"
-
 func main() {
+	godotenv.Load()
+
+	token := os.Getenv("TOKEN")
+
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		log.Panic(err)
@@ -35,6 +39,8 @@ func main() {
 		switch update.Message.Command() {
 		case "help":
 			helpCommand(bot, update.Message)
+		case "list":
+			listCommand(bot, update.Message)
 		default:
 			defaultBehavior(bot, update.Message)
 		}
@@ -42,8 +48,16 @@ func main() {
 }
 
 func helpCommand(bot *tgbotapi.BotAPI, inputMessage *tgbotapi.Message) {
-	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, "/help - help")
+	msg := tgbotapi.NewMessage(inputMessage.Chat.ID,
+		"/help - help\n"+
+		"/list - list products",
+	)
 
+	bot.Send(msg)
+}
+
+func listCommand(bot *tgbotapi.BotAPI, inputMessage *tgbotapi.Message) {
+	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, "TBD")
 	bot.Send(msg)
 }
 
